@@ -62,8 +62,3 @@ for c in input {
 }
 print(String(format: "%.2f" , stack.pop()))
 
-extension String {
-    subscript(_ index: Int) -> Character {
-        return self[self.index(self.startIndex, offsetBy: index)]
-    }
-}
