@@ -46,5 +46,3 @@ for height in 0...100 {
 }
 
 print(max)
-
-
