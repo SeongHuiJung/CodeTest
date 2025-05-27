@@ -12,7 +12,6 @@ for _ in 0..<N - 1 {
     edge[input[0]].append(input[1])
     edge[input[1]].append(input[0])
 }
-
 var count = 0
 
 for i in 1...N {
@@ -32,7 +31,7 @@ func dfs(item: Int) {
             // 실내
             if inoutDoor[edge[item][i]] == 1 {
                 count += 1
-                if inoutDoor[item] == 1 { return }
+                if inoutDoor[item] == 1 { continue }
             }
             // 실외
             else {
