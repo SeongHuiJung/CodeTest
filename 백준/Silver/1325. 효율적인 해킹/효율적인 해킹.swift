@@ -1,49 +1,76 @@
 import Foundation
 
-var input = readLine()!.split(separator: " ").map { Int($0)! }
-let (N, M) = (input[0], input[1])
+struct Queue<T> {
+  var elements: [T]
+  var index = 0
+  
+  init(_ elements: [T] = []) {
+    self.elements = elements
+  }
+  
+  var isEmpty: Bool {
+    !(elements.count > index)
+  }
+  
+  mutating func enqueue(_ element: T) {
+    elements.append(element)
+  }
+  
+  mutating func dequeue() -> T {
+    index += 1
+    return elements[index - 1]
+  }
+}
 
-var graph = [[Int]](repeating: [], count: N + 1)
 
-for _ in 0..<M {
-    let edge = readLine()!.split(separator: " ").map { Int($0)! }
-    let (a, b) = (edge[0], edge[1])
-    // b -> a로 바꿈 (해킹당할 수 있는 방향으로 저장)
+func bfs(_ start: Int, graph: [[Int]]) -> Int {
+  var visit = Array(repeating: false, count: graph.count)
+  visit[start] = true
+  
+  var queue = Queue([start])
+  var cnt = 0
+  
+  while queue.isEmpty == false {
+    let cur = queue.dequeue()
+    
+    for next in graph[cur] where visit[next] == false {
+      cnt += 1
+      visit[next] = true
+      queue.enqueue(next)
+    }
+  }
+  
+  return cnt
+}
+
+func solution() -> String {
+  let nm = readLine()!.split(separator: " ").map {Int($0)!}
+  let (n, m) = (nm[0], nm[1])
+  
+  var graph = Array(repeating: [Int](), count: n+1)
+  
+  for _ in 0..<m {
+    let ab = readLine()!.split(separator: " ").map {Int($0)!}
+    let (a, b) = (ab[0], ab[1])
     graph[b].append(a)
-}
-
-func bfs(start: Int) -> Int {
-    var visited = [Bool](repeating: false, count: N + 1)
-    var q = [start]
-    visited[start] = true
-    var count = 1
-
-    var idx = 0
-    while idx < q.count {
-        let node = q[idx]
-        idx += 1
-        for next in graph[node] {
-            if !visited[next] {
-                visited[next] = true
-                q.append(next)
-                count += 1
-            }
-        }
+  }
+  
+  var maxCnt = 0
+  var result = [String]()
+  
+  for i in 1...n {
+    let cnt = bfs(i, graph: graph)
+    
+    if cnt > maxCnt {
+      maxCnt = cnt
+      result = [String(i)]
     }
-    return count
-}
-
-var result = [Int]()
-var maxCount = 0
-
-for i in 1...N {
-    let count = bfs(start: i)
-    if count > maxCount {
-        maxCount = count
-        result = [i]
-    } else if count == maxCount {
-        result.append(i)
+    else if cnt == maxCnt {
+      result.append(String(i))
     }
+  }
+  
+  return result.joined(separator: " ")
 }
 
-print(result.sorted().map { String($0) }.joined(separator: " "))
+print(solution())
